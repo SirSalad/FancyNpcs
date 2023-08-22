@@ -14,9 +14,10 @@ import de.oliver.fancynpcs.api.NpcData;
 import de.oliver.fancynpcs.api.NpcManager;
 import de.oliver.fancynpcs.commands.FancyNpcsCMD;
 import de.oliver.fancynpcs.commands.npc.NpcCMD;
+import de.oliver.fancynpcs.listeners.PlayerChangedWorldListener;
 import de.oliver.fancynpcs.listeners.PlayerJoinListener;
+import de.oliver.fancynpcs.listeners.PlayerMoveListener;
 import de.oliver.fancynpcs.listeners.PlayerUseUnknownEntityListener;
-import de.oliver.fancynpcs.tracker.NpcTracker;
 import de.oliver.fancynpcs.v1_19_4.Npc_1_19_4;
 import de.oliver.fancynpcs.v1_20_1.Npc_1_20_1;
 import org.apache.maven.artifact.versioning.ComparableVersion;
@@ -149,14 +150,14 @@ public class FancyNpcs extends JavaPlugin implements FancyNpcsPlugin {
         // register listeners
         pluginManager.registerEvents(new PlayerJoinListener(), instance);
         pluginManager.registerEvents(new PlayerUseUnknownEntityListener(), instance);
+        pluginManager.registerEvents(new PlayerChangedWorldListener(), instance);
+        pluginManager.registerEvents(new PlayerMoveListener(), instance);
 
         // using bungee plugin channel
         getServer().getMessenger().registerOutgoingPluginChannel(this, "BungeeCord");
 
         // load config
         scheduler.runTaskLater(null, 20L * 5, () -> npcManager.loadNpcs());
-
-        scheduler.runTaskTimerAsynchronously(0, 1, new NpcTracker());
 
         int autosaveInterval = config.getAutoSaveInterval();
         if (config.isEnableAutoSave()) {
